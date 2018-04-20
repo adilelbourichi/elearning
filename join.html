@@ -1,0 +1,131 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> Welcome to Adasco Consulting </title>    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/css/materialize.min.css">
+    <style type="text/css">
+        html,
+        body {
+            height: 100%;
+        }
+        html {
+            display: table;
+            margin: auto;
+        }
+        body {
+            display: table-cell;
+            vertical-align: middle;
+        }
+        .margin {
+          margin: 0 !important;
+        }
+        .navbar {
+            color: aquamarine;
+            background-color: darkcyan;
+            border-radius:0;
+        }
+        .clear {
+            clear: both;
+        }
+        .content {
+            margin: 10px 45px;
+        }
+        .in, content {
+            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.1/js/materialize.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    $(function(){
+        $("#submit_button").click(function(){
+           var firstName = $("#firstName").val();
+           var lastName = $("#lastName").val();
+           var email = $("#email").val(); 
+           var password = $("#password").val();
+           var passwordAgain = $("#password-again").val();
+           if(password !== passwordAgain)
+            {
+                swal("Passwords do not much!!", "", "error");
+                return;
+            }
+           $.post("http://adascoconsultinginternational.com/backend/adduser.php",{
+               firstName: firstName,
+               lastName: lastName,
+               email: email,
+               password: password
+           }).done(function(returnedID){
+		var adescoUserId = returnedID;
+		sessionStorage.setItem('adescoUserId', adescoUserId);
+		window.location = 'home.html';
+	   });
+ 
+        });
+    });
+</script>
+<body>
+    <div class="navbar">
+            The Adasco Initiative  
+        <div class="clear"></div>
+    </div>
+    <div id="login-page" class="row">
+        <div class="col s12 z-depth-6 card-panel">
+           <form class="login-form">
+                <div class="row margin">
+                  <div class="col s12">
+                      <div class="input-field col s6">
+                        <i class="mdi-social-person-outline prefix"></i>
+                        <input id="firstName" type="text" class="validate">
+                        <label for="username" class="center-align">First Name</label>
+                      </div>
+                      <div class="input-field col s6">
+                        <input id="lastName" type="text" class="validate">
+                        <label for="username" class="center-align">Last Name</label>
+                      </div>
+                  </div>
+                </div>
+                <div class="row margin">
+                  <div class="input-field col s12">
+                    <i class="mdi-communication-email prefix"></i>
+                    <input id="email" type="email" class="validate">
+                    <label for="email" class="center-align">Email</label>
+                  </div>
+                </div>
+                <div class="row margin">
+                  <div class="input-field col s12">
+                    <i class="mdi-action-lock-outline prefix"></i>
+                    <input id="password" type="password" class="validate">
+                    <label for="password">Password</label>
+                  </div>
+                </div>
+                <div class="row margin">
+                  <div class="input-field col s12">
+                    <i class="mdi-action-lock-outline prefix"></i>
+                    <input id="password-again" type="password">
+                    <label for="password-again">Re-type password</label>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <a href="#" class="btn waves-effect waves-light col s12" id="submit_button">Register Now</a>
+                  </div>
+                  <div class="input-field col s12">
+                    <p class="margin center medium-small sign-up">Already have an account? <a href="login.html">Login</a></p>
+                  </div>
+                </div>
+            </form>
+        </div>   
+    </div>
+    <div class="footer">      
+      <a href="privacy.html" style="margin-right: 0px">Privacy and policy
+      </a>
+        <span style="color: rgba(255,255,255,.5);margin-top: 13px;font-size: 12px;display: block;">
+            Copyright - www.adascoconsultinginternational.com - 2018
+        </span>
+    </div>    
+</body>                       
+</html>

@@ -1,0 +1,187 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> Register </title>    
+    <link rel="stylesheet" type="text/css" href="css/app.css">	    
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">	
+</head>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+        var currentUserId = sessionStorage.getItem('adescoUserId');
+        if(currentUserId == null || currentUserId == 0)
+        {
+            window.location = 'join.html';
+        }
+        else
+        {
+            $.get("http://adascoconsultinginternational.com/backend/getUserName.php?id=" + currentUserId, function(firstName){
+                $("#username").text("Welcome, " + firstName + "!"); 
+            });
+            var url = new URL(window.location.href);
+            var selectedClassName = url.searchParams.get("class");
+            
+            $("#logout").click(function(){
+                sessionStorage.setItem('adescoUserId', null);
+                window.location = "login.html"
+            });
+    
+            $.get("http://adascoconsultinginternational.com/backend/getclasses.php", function(classesData){
+                var classes = JSON.parse(classesData);
+                $.each(classes, function(j, row){
+                    var className = row['className'];
+                    var classDescription = row['classDescription'];
+                    if(className == selectedClassName)
+                    {
+                        $("#classes").append($('<option>', {
+                            value: className,
+                            text: classDescription,
+                            selected: 'selected'
+                        }));
+                        var price = row['price'];
+                        $("#total_price").text(price);
+                        $("#unitPrice").text(price);
+                        var wholeSalePrice = row['total'];
+                        $("#wholeSalePrice").text(wholeSalePrice);
+                        var sessions = row['sessions'];
+                        $.each(sessions, function(k, session){
+                           if(k == 1)
+                           {
+                                $("#sessions").append($('<option>', {
+                                    text: session,
+                                    selected: 'selected'
+                                }));
+                            }
+                            else
+                            {
+                                $("#sessions").append($('<option>', {
+                                    text: session
+                                }));
+                            }
+                        });
+                    }
+                    else
+                    {
+                        $("#classes").append($('<option>', {
+                            value: className,
+                            text: classDescription
+                        }));
+                    }
+                    
+                });
+                
+                $("#sessions").change(function(){
+                    var newSession = $(this).val();
+                    if(newSession.startsWith("Register for all") == true)
+                    {
+                        var wholeSalePrice = $("#wholeSalePrice").text();
+                        $("#total_price").text(wholeSalePrice);
+                    }
+                    else
+                    {
+                        var unitPrice = $("#unitPrice").text();
+                        $("#total_price").text(unitPrice);
+                    }
+                });
+                
+                $("#submit_button").click(function(event){
+                    event.preventDefault();
+                    //get the list of all options
+                    var options = $('#sessions option');
+                    var values = $.map(options ,function(option) {
+                        return option.value;
+                    });
+                    var total_price = $("#total_price").text();
+                    var selectedSession = $("#sessions").val();
+                    var selectedClass = $("#classes").find(':selected').text();
+                    $.get("http://adascoconsultinginternational.com/backend/getEmail.php?id=" + currentUserId, function(userEmail){
+                        //process payment
+                        console.log(userEmail);
+                        console.log(total_price);
+                        
+                        $.post("http://adascoconsultinginternational.com/backend/addregistration.php", {
+                            userId: currentUserId,
+                            session: selectedSession,
+                            className: selectedClass,
+                            options: values
+                        }).done(function(){
+                           swal("Registered.", "", "success"); 
+                        });
+                    });
+                });
+                
+                $("#classes").change(function(){
+                   var newClassName = $(this).val();
+                   window.location = "http://adascoconsultinginternational.com/register.html?class=" + newClassName;
+                });
+            });
+        }
+</script>
+<style>
+    select {
+        width: 175px;
+    }
+</style>
+<span style="visibility: hidden" id="wholeSalePrice"></span>
+<span style="visibility: hidden" id="unitPrice"></span>
+<body>
+    <div class="navbar">
+        <span class="logo"> 
+                Adasco Initiative 
+        </span>
+        <div class="clear">
+            <span id="username" style="float: right"></span>
+            <br>
+            <a href="myregistrations.html">My Registrations</a>
+<!--
+            &nbsp;&nbsp;
+            <a href="donate.html">Donate</a>
+-->
+            &nbsp;&nbsp;
+            <a href="home.html">Home</a>
+        </div>
+    </div>
+    <div class="content">             
+        <div class="in">
+            <form class="form-horizontal" action="#">
+                <div class="row col-md-12">
+                    <div class="col-md-2">Class</div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <select id="classes"></select>
+                    </div>
+                </div>
+                <br>
+                <div class="row col-md-12">
+                    <div class="col-md-2">Session</div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        <select id="sessions"></select>
+                    </div>
+                </div>
+                <br>
+                <div class="row col-md-12">
+                    <div class="col-md-2">Total</div>
+                    <div class="col-md-2"></div>
+                    <div class="col-md-8">
+                        $ &nbsp;<span id="total_price">0.00</span>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                  <div class="input-field col s12">
+                    <button class="btn btn-success col s12" id="submit_button">Proceed</button>
+                  </div>
+                </div>
+            </form>
+        </div>   
+    </div>
+    <div class="footer">      
+      <a href="privacy.html" style="margin-right: 0px">Privacy and policy
+      </a>
+        <span style="color: rgba(255,255,255,.5);margin-top: 13px;font-size: 12px;display: block;">
+            Copyright - www.adascoconsultinginternational.com - 2018
+        </span>
+    </div>    
+</body>                       
+</html>

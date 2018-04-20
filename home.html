@@ -1,0 +1,89 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title> Current Activities </title>    
+    <link rel="stylesheet" type="text/css" href="css/app.css">	 
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">	
+</head>
+<script src="js/jquery-3.3.1.min.js"></script>
+<script>
+    var currentUserId = sessionStorage.getItem('adescoUserId');
+    if( currentUserId == null || currentUserId == 0 )
+    {
+            window.location = 'join.html';
+    }
+    else
+    {
+        $.get("http://adascoconsultinginternational.com/backend/getUserName.php?id=" + currentUserId, function(firstName){
+            $("#username").text("Welcome, " + firstName + "!"); 
+        });
+    }
+</script>
+<body>
+    <div class="navbar">
+        <span class="logo"> 
+                Adasco Initiative 
+        </span>
+        <div class="clear">
+            <span id="username" style="float: right"></span>
+            <br>
+            <a href="myregistrations.html">My Registrations</a>
+<!--
+            &nbsp;&nbsp;
+            <a href="donate.html">Donate</a>
+-->
+        </div>
+    </div>
+    <div class="content">             
+        <div class="in">
+            <div class="app">
+                <a href="register.html?class=painting-drawing" style="background: url('img/painting.png');" class="appbox">
+                    <span class="letsgo">Painting And Drawing</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=film" style="background: url('img/film-making.jpg');" class="appbox">
+                    <span class="letsgo">Film Making</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=fashion" style="background: url('img/fashion.jpg');" class="appbox">
+                    <span class="letsgo">Fashion Drawing</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=yoga" style="background: url('img/yoga.jpg');" class="appbox">
+                    <span class="letsgo">Yoga</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=chess" style="background: url('img/chess.jpg');" class="appbox">
+                    <span class="letsgo">Chess</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=table-tennis" style="background: url('img/table-tennis.jpeg');" class="appbox">
+                    <span class="letsgo">Table Tennis</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=gardening" style="background: url('img/gardening.jpg');" class="appbox">
+                    <span class="letsgo">Gardening</span> 
+                </a>            
+            </div>
+            <div class="app">
+                <a href="register.html?class=reading-club" style="background: url('img/reading-club.png');" class="appbox">
+                    <span class="letsgo">Reading Club</span>
+                </a>            
+            </div>
+        </div>   
+    </div>
+    <div class="footer">      
+      <a href="privacy.html" style="margin-right: 0px">Privacy and policy
+      </a>
+        <span style="color: rgba(255,255,255,.5);margin-top: 13px;font-size: 12px;display: block;">
+            Copyright - www.adascoconsultinginternational.com - 2018
+        </span>
+    </div>    
+</body>                       
+</html>
